@@ -28,7 +28,7 @@ public class ItemDAO {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
         pstm.setString(1, code);
-        return pstm.executeUpdate()>0;
+        return pstm.executeUpdate() > 0;
     }
 
     public boolean saveItem(ItemDTO dto) throws SQLException, ClassNotFoundException {
@@ -38,6 +38,16 @@ public class ItemDAO {
         pstm.setString(2, dto.getDescription());
         pstm.setBigDecimal(3, dto.getUnitPrice());
         pstm.setInt(4, dto.getQtyOnHand());
-        return pstm.executeUpdate()>0;
+        return pstm.executeUpdate() > 0;
+    }
+
+    public boolean updateItem(ItemDTO dto) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
+        pstm.setString(1, dto.getDescription());
+        pstm.setBigDecimal(2, dto.getUnitPrice());
+        pstm.setInt(3, dto.getQtyOnHand());
+        pstm.setString(4, dto.getCode());
+        return pstm.executeUpdate() > 0;
     }
 }
