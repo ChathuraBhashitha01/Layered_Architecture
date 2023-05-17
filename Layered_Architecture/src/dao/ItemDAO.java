@@ -69,4 +69,20 @@ public class ItemDAO {
             return "I00-001";
         }
     }
+
+    public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+        pstm.setString(1, code);
+        ResultSet rst = pstm.executeQuery();
+        if (rst.next()){
+           String iCode= rst.getString(1);
+            String iName = rst.getString(2);
+            int iQty = rst.getInt(3);
+            BigDecimal iPrice = rst.getBigDecimal(4);
+            return new ItemDTO(iCode,iName,iPrice,iQty);
+        }
+        return null;
+
+    }
 }

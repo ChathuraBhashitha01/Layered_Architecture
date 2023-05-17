@@ -130,11 +130,11 @@ public class PlaceOrderFormController {
                     if (!existItem(newItemCode + "")) {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
-                    Connection connection = DBConnection.getDbConnection().getConnection();
-                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
-                    pstm.setString(1, newItemCode + "");
-                    ResultSet rst = pstm.executeQuery();
-                    rst.next();
+//                    Connection connection = DBConnection.getDbConnection().getConnection();
+//                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+//                    pstm.setString(1, newItemCode + "");
+//                    ResultSet rst = pstm.executeQuery();
+//                    rst.next();
                     ItemDTO item = new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
 
                     txtDescription.setText(item.getDescription());
