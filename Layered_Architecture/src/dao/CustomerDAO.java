@@ -69,4 +69,19 @@ public class CustomerDAO {
             return "C00-001";
         }
     }
+
+
+    public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
+        pstm.setString(1, id);
+        ResultSet rst = pstm.executeQuery();
+        if (rst.next()){
+            String cusID = rst.getString(1);
+            String name = rst.getString(2);
+            String address = rst.getString(3);
+           return new CustomerDTO(cusID,name,address);
+        }
+        return null;
+    }
 }
