@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import dao.CustomerDAO;
+import dao.ItemDAO;
 import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -130,12 +131,9 @@ public class PlaceOrderFormController {
                     if (!existItem(newItemCode + "")) {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
-//                    Connection connection = DBConnection.getDbConnection().getConnection();
-//                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
-//                    pstm.setString(1, newItemCode + "");
-//                    ResultSet rst = pstm.executeQuery();
-//                    rst.next();
-                    ItemDTO item = new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+//
+                    ItemDAO itemDAO = new ItemDAO();
+                    ItemDTO item = itemDAO.searchItem(newItemCode);
 
                     txtDescription.setText(item.getDescription());
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());

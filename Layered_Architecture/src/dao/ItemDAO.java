@@ -83,6 +83,5 @@ public class ItemDAO {
             return new ItemDTO(iCode,iName,iPrice,iQty);
         }
         return null;
-
     }
 }
