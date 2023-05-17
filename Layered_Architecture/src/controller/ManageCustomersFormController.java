@@ -148,7 +148,7 @@ public class ManageCustomersFormController {
                 }
 
                 CustomerDAO customerDAO = new CustomerDAO();
-                customerDAO.saveCustomer(new CustomerDTO(id,name,address));
+                customerDAO.saveCustomer(new CustomerDTO(id, name, address));
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
@@ -166,7 +166,7 @@ public class ManageCustomersFormController {
                 }
 
                 CustomerDAO customerDAO = new CustomerDAO();
-                customerDAO.updateCustomer(new CustomerDTO(id,name,address));
+                customerDAO.updateCustomer(new CustomerDTO(id, name, address));
 
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
@@ -185,10 +185,8 @@ public class ManageCustomersFormController {
 
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeQuery().next();
+        CustomerDAO customerDAO = new CustomerDAO();
+        return customerDAO.existCustomer(id);
     }
 
 
