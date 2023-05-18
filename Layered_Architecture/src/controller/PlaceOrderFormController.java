@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTextField;
 import dao.CustomerDAO;
 import dao.ItemDAO;
 import dao.OrderDAO;
+import dao.OrderDetailsDAO;
 import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -340,15 +341,13 @@ public class PlaceOrderFormController {
                 return false;
             }
 
-            stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
+            OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAO();
+
 
             for (OrderDetailDTO detail : orderDetails) {
-                stm.setString(1, orderId);
-                stm.setString(2, detail.getItemCode());
-                stm.setBigDecimal(3, detail.getUnitPrice());
-                stm.setInt(4, detail.getQty());
+                boolean odAdded = orderDetailsDAO.saveOrderDetails(detail);
 
-                if (stm.executeUpdate() != 1) {
+                if (odAdded) {
                     connection.rollback();
                     connection.setAutoCommit(true);
                     return false;
