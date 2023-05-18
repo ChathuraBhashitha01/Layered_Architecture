@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -204,12 +205,11 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+            CustomerDAO customerDAO = new CustomerDAO();
+            ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
 
-            while (rst.next()) {
-                cmbCustomerId.getItems().add(rst.getString("id"));
+            for (CustomerDTO c : allCustomers) {
+                cmbCustomerId.getItems().add(c.getId());
             }
 
         } catch (SQLException e) {
