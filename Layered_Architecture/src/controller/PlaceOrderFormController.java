@@ -335,7 +335,7 @@ public class PlaceOrderFormController {
             OrderDTO orderDTO = new OrderDTO(orderId, orderDate, customerId);
             boolean orderAdded = orderDAO.saveOrder(orderDTO);
 
-            if (orderAdded) {
+            if (!orderAdded) {
                 connection.rollback();
                 connection.setAutoCommit(true);
                 return false;
@@ -347,7 +347,7 @@ public class PlaceOrderFormController {
             for (OrderDetailDTO detail : orderDetails) {
                 boolean odAdded = orderDetailsDAO.saveOrderDetails(detail);
 
-                if (odAdded) {
+                if (!odAdded) {
                     connection.rollback();
                     connection.setAutoCommit(true);
                     return false;
@@ -357,13 +357,10 @@ public class PlaceOrderFormController {
                 ItemDTO item = findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-                PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
-                pstm.setString(1, item.getDescription());
-                pstm.setBigDecimal(2, item.getUnitPrice());
-                pstm.setInt(3, item.getQtyOnHand());
-                pstm.setString(4, item.getCode());
+                ItemDAO itemDAO= new ItemDAO();
+                boolean itemUpdate = itemDAO.updateItem(item);
 
-                if (!(pstm.executeUpdate() > 0)) {
+                if (!itemUpdate) {
                     connection.rollback();
                     connection.setAutoCommit(true);
                     return false;
