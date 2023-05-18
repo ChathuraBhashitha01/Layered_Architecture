@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.CustomerDTO;
 import model.ItemDTO;
+import model.OrderDTO;
 import model.OrderDetailDTO;
 import view.tdm.OrderDetailTM;
 
@@ -333,6 +334,8 @@ public class PlaceOrderFormController {
             stm.setString(1, orderId);
             stm.setDate(2, Date.valueOf(orderDate));
             stm.setString(3, customerId);
+            new OrderDTO(orderId,orderDate,customerId);
+            orderDAO.saveOrder()
 
             if (stm.executeUpdate() != 1) {
                 connection.rollback();
