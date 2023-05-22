@@ -6,10 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CrudDAOImpl implements CrudDAO {
-
+public class CustomerDAO implements CrudDAO<CustomerDTO,String> {
     @Override
-    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
+    public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
         ResultSet rst = SQLUtil.execute("SELECT * FROM Customer");
         while (rst.next()) {
@@ -18,26 +17,24 @@ public class CrudDAOImpl implements CrudDAO {
         return allCustomers;
     }
 
-
     @Override
-    public boolean saveCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+    public boolean save(CustomerDTO dto) throws SQLException, ClassNotFoundException {
         return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", dto.getId(), dto.getName(), dto.getAddress());
     }
 
     @Override
-    public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+    public boolean update(CustomerDTO dto) throws SQLException, ClassNotFoundException {
         return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?", dto.getName(), dto.getAddress(), dto.getId());
     }
 
     @Override
-    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
+    public boolean exist(String s) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT id FROM Customer WHERE id=?", id);
         return rst.next();
     }
 
-
     @Override
-    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
         return SQLUtil.execute("DELETE FROM Customer WHERE id=?", id);
     }
 
@@ -53,13 +50,13 @@ public class CrudDAOImpl implements CrudDAO {
         }
     }
 
-
     @Override
-    public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
+    public CustomerDTO search(String s) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM Customer WHERE id=?", id);
         if (rst.next()) {
             return new CustomerDTO(rst.getString(1), rst.getString(2), rst.getString(3));
         }
         return null;
     }
+
 }
