@@ -57,9 +57,9 @@ public class PlaceOrderFormController {
     private String orderId;
 
     CrudDAO crudDAO = new CustomerDAO();
-    ItemDAO itemDAO = new ItemDAOImpl();
-    OrderDAO orderDAO = new OrderDAOImpl();
-    OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAOImpl();
+    CrudDAO itemDAO = new ItemDAOImpl();
+    CrudDAO orderDAO = new OrderDAOImpl();
+    CrudDAO orderDetailsDAO = new OrderDetailsDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
 
@@ -110,7 +110,7 @@ public class PlaceOrderFormController {
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
 
-                        CustomerDTO customerDTO = crudDAO.searchCustomer(newValue + "");
+                        CustomerDTO customerDTO = crudDAO.search(newValue + "");
 
                         txtCustomerName.setText(customerDTO.getName());
                     } catch (SQLException e) {
@@ -139,7 +139,7 @@ public class PlaceOrderFormController {
                     }
 //
 
-                    ItemDTO item = itemDAO.searchItem(newItemCode);
+                    ItemDTO item = itemDAO.search(newItemCode);
 
                     txtDescription.setText(item.getDescription());
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
@@ -185,17 +185,17 @@ public class PlaceOrderFormController {
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
 
-        return itemDAO.existItem(code);
+        return itemDAO.exist(code);
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return crudDAO.existCustomer(id);
+        return crudDAO.exist(id);
     }
 
     public String generateNewOrderId() {
         try {
 
-            return orderDAO.generateNewOID();
+            return orderDAO.generateNewID();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
         } catch (ClassNotFoundException e) {
@@ -206,7 +206,7 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            ArrayList<CustomerDTO> allCustomers = crudDAO.getAllCustomers();
+            ArrayList<CustomerDTO> allCustomers = crudDAO.getAll();
 
             for (CustomerDTO c : allCustomers) {
                 cmbCustomerId.getItems().add(c.getId());
@@ -223,7 +223,7 @@ public class PlaceOrderFormController {
         try {
             /*Get all items*/
 
-            ArrayList<ItemDTO> allItems = itemDAO.getAllItems();
+            ArrayList<ItemDTO> allItems = itemDAO.getAll();
             for (ItemDTO i : allItems) {
                 cmbItemCode.getItems().add(i.getCode());
             }
@@ -325,14 +325,14 @@ public class PlaceOrderFormController {
         try {
             connection = DBConnection.getDbConnection().getConnection();
             /*if order id already exist*/
-            if (orderDAO.existOrder(orderId)) {
+            if (orderDAO.exist(orderId)) {
                 return false;
             }
 
             connection.setAutoCommit(false);
 
             OrderDTO orderDTO = new OrderDTO(orderId, orderDate, customerId);
-            boolean orderAdded = orderDAO.saveOrder(orderDTO);
+            boolean orderAdded = orderDAO.save(orderDTO);
 
             if (!orderAdded) {
                 connection.rollback();
@@ -341,7 +341,7 @@ public class PlaceOrderFormController {
             }
 
             for (OrderDetailDTO detail : orderDetails) {
-                boolean odAdded = orderDetailsDAO.saveOrderDetails(detail);
+                boolean odAdded = orderDetailsDAO.save(detail);
 
                 if (!odAdded) {
                     connection.rollback();
@@ -354,7 +354,7 @@ public class PlaceOrderFormController {
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
 
-                boolean itemUpdate = itemDAO.updateItem(item);
+                boolean itemUpdate = itemDAO.update(item);
 
                 if (!itemUpdate) {
                     connection.rollback();
@@ -379,7 +379,7 @@ public class PlaceOrderFormController {
     public ItemDTO findItem(String code) {
         try {
 
-            return itemDAO.searchItem(code);
+            return itemDAO.search(code);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find the Item " + code, e);
         } catch (ClassNotFoundException e) {
