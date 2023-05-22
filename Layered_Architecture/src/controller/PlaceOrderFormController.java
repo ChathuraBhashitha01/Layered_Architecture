@@ -56,7 +56,7 @@ public class PlaceOrderFormController {
     public Label lblTotal;
     private String orderId;
 
-    CustomerDAO customerDAO = new CustomerDAOImpl();
+    CrudDAO crudDAO = new CrudDAOImpl();
     ItemDAO itemDAO = new ItemDAOImpl();
     OrderDAO orderDAO = new OrderDAOImpl();
     OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAOImpl();
@@ -110,7 +110,7 @@ public class PlaceOrderFormController {
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
 
-                        CustomerDTO customerDTO = customerDAO.searchCustomer(newValue + "");
+                        CustomerDTO customerDTO = crudDAO.searchCustomer(newValue + "");
 
                         txtCustomerName.setText(customerDTO.getName());
                     } catch (SQLException e) {
@@ -189,7 +189,7 @@ public class PlaceOrderFormController {
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAO.existCustomer(id);
+        return crudDAO.existCustomer(id);
     }
 
     public String generateNewOrderId() {
@@ -206,7 +206,7 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
+            ArrayList<CustomerDTO> allCustomers = crudDAO.getAllCustomers();
 
             for (CustomerDTO c : allCustomers) {
                 cmbCustomerId.getItems().add(c.getId());
