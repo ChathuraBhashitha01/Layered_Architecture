@@ -4,10 +4,8 @@ import db.DBConnection;
 import model.OrderDetailDTO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public class OrderDetailsDAO {
  public boolean saveOrderDetails(OrderDetailDTO dto) throws SQLException, ClassNotFoundException {
