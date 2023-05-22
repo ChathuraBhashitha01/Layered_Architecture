@@ -1,13 +1,11 @@
 package dao;
 
-import db.DBConnection;
 import model.ItemDTO;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ItemDAO {
+public class ItemDAOImpl {
     public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM Item");
         ArrayList<ItemDTO> allItems = new ArrayList<>();
