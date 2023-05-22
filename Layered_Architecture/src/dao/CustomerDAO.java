@@ -13,11 +13,7 @@ public class CustomerDAO {
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
         ResultSet rst = SQLUtil.execute("SELECT * FROM Customer");
         while (rst.next()) {
-            String id = rst.getString(1);
-            String name = rst.getString(2);
-            String address = rst.getString(3);
-            CustomerDTO customerDTO = new CustomerDTO(id, name, address);
-            allCustomers.add(customerDTO);
+            allCustomers.add(new CustomerDTO(rst.getString(1), rst.getString(2), rst.getString(3)));
         }
         return allCustomers;
     }
