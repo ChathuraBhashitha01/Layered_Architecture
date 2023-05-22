@@ -10,10 +10,8 @@ import java.util.ArrayList;
 public class CustomerDAO {
 
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        Statement stm = connection.createStatement();
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
-        ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+        ResultSet rst = SQLUtil.execute("SELECT * FROM Customer");
         while (rst.next()) {
             String id = rst.getString(1);
             String name = rst.getString(2);
@@ -26,12 +24,7 @@ public class CustomerDAO {
 
 
     public boolean saveCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer (id,name, address) VALUES (?,?,?)");
-        pstm.setString(1, dto.getId());
-        pstm.setString(2, dto.getName());
-        pstm.setString(3, dto.getAddress());
-        return pstm.executeUpdate()>0;
+       return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)",dto.getId(),dto.getName(), dto.getAddress());
     }
 
     public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
