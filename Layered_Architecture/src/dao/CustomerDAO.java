@@ -20,21 +20,21 @@ public class CustomerDAO {
 
 
     public boolean saveCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-       return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)",dto.getId(),dto.getName(), dto.getAddress());
+        return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", dto.getId(), dto.getName(), dto.getAddress());
     }
 
     public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?",dto.getName(),dto.getAddress(),dto.getId());
+        return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?", dto.getName(), dto.getAddress(), dto.getId());
     }
 
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        ResultSet rst = SQLUtil.execute("SELECT id FROM Customer WHERE id=?",id);
+        ResultSet rst = SQLUtil.execute("SELECT id FROM Customer WHERE id=?", id);
         return rst.next();
     }
 
 
     public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("DELETE FROM Customer WHERE id=?",id);
+        return SQLUtil.execute("DELETE FROM Customer WHERE id=?", id);
     }
 
     public String generateNewID() throws SQLException, ClassNotFoundException {
@@ -50,12 +50,9 @@ public class CustomerDAO {
 
 
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
-        ResultSet rst  = SQLUtil.execute("SELECT * FROM Customer WHERE id=?",id);
-        if (rst.next()){
-            String cusID = rst.getString(1);
-            String name = rst.getString(2);
-            String address = rst.getString(3);
-           return new CustomerDTO(cusID,name,address);
+        ResultSet rst = SQLUtil.execute("SELECT * FROM Customer WHERE id=?", id);
+        if (rst.next()) {
+            return new CustomerDTO(rst.getString(1), rst.getString(2), rst.getString(3));
         }
         return null;
     }
