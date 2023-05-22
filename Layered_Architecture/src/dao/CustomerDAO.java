@@ -28,32 +28,21 @@ public class CustomerDAO {
     }
 
     public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
-        pstm.setString(1, dto.getName());
-        pstm.setString(2, dto.getAddress());
-        pstm.setString(3, dto.getId());
-        return pstm.executeUpdate()>0;
+        return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?",dto.getName(),dto.getAddress(),dto.getId());
     }
 
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeQuery().next();
+        ResultSet rst = SQLUtil.execute("SELECT id FROM Customer WHERE id=?",id);
+        return rst.next();
     }
 
 
     public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeUpdate()>0;
+        return SQLUtil.execute("DELETE FROM Customer WHERE id=?",id);
     }
 
     public String generateNewID() throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
+        ResultSet rst = SQLUtil.execute("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
         if (rst.next()) {
             String id = rst.getString("id");
             int newCustomerId = Integer.parseInt(id.replace("C00-", "")) + 1;
@@ -65,10 +54,7 @@ public class CustomerDAO {
 
 
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        ResultSet rst = pstm.executeQuery();
+        ResultSet rst  = SQLUtil.execute("SELECT * FROM Customer WHERE id=?",id);
         if (rst.next()){
             String cusID = rst.getString(1);
             String name = rst.getString(2);
