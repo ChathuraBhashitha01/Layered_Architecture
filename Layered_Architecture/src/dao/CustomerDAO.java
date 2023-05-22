@@ -28,7 +28,7 @@ public class CustomerDAO implements CrudDAO<CustomerDTO,String> {
     }
 
     @Override
-    public boolean exist(String s) throws SQLException, ClassNotFoundException {
+    public boolean exist(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT id FROM Customer WHERE id=?", id);
         return rst.next();
     }
@@ -51,7 +51,7 @@ public class CustomerDAO implements CrudDAO<CustomerDTO,String> {
     }
 
     @Override
-    public CustomerDTO search(String s) throws SQLException, ClassNotFoundException {
+    public CustomerDTO search(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM Customer WHERE id=?", id);
         if (rst.next()) {
             return new CustomerDTO(rst.getString(1), rst.getString(2), rst.getString(3));
