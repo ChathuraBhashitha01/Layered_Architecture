@@ -26,7 +26,8 @@ import view.tdm.OrderDetailTM;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,6 @@ public class PlaceOrderFormController {
     CrudDAO<OrderDetailDTO,String> orderDetailsDAO = new OrderDetailsDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
-
         tblOrderDetails.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblOrderDetails.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
         tblOrderDetails.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("qty"));
@@ -80,7 +80,6 @@ public class PlaceOrderFormController {
                 calculateTotal();
                 enableOrDisablePlaceOrderButton();
             });
-
             return new ReadOnlyObjectWrapper<>(btnDelete);
         });
 
@@ -102,7 +101,6 @@ public class PlaceOrderFormController {
 
         cmbCustomerId.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             enableOrDisablePlaceOrderButton();
-
             if (newValue != null) {
                 try {
                     /*Search Customer*/
@@ -132,20 +130,16 @@ public class PlaceOrderFormController {
             btnSave.setDisable(newItemCode == null);
 
             if (newItemCode != null) {
-
                 /*Find Item*/
                 try {
                     if (!existItem(newItemCode + "")) {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
-//
 
                     ItemDTO item = itemDAO.search(newItemCode);
-
                     txtDescription.setText(item.getDescription());
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
 
-//                    txtQtyOnHand.setText(tblOrderDetails.getItems().stream().filter(detail-> detail.getCode().equals(item.getCode())).<Integer>map(detail-> item.getQtyOnHand() - detail.getQty()).findFirst().orElse(item.getQtyOnHand()) + "");
                     Optional<OrderDetailTM> optOrderDetail = tblOrderDetails.getItems().stream().filter(detail -> detail.getCode().equals(newItemCode)).findFirst();
                     txtQtyOnHand.setText((optOrderDetail.isPresent() ? item.getQtyOnHand() - optOrderDetail.get().getQty() : item.getQtyOnHand()) + "");
 
@@ -177,7 +171,6 @@ public class PlaceOrderFormController {
                 cmbItemCode.getSelectionModel().clearSelection();
                 txtQty.clear();
             }
-
         });
 
         loadAllCustomerIds();
@@ -185,7 +178,6 @@ public class PlaceOrderFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-
         return itemDAO.exist(code);
     }
 
@@ -195,7 +187,6 @@ public class PlaceOrderFormController {
 
     public String generateNewOrderId() {
         try {
-
             return orderDAO.generateNewID();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
@@ -208,7 +199,6 @@ public class PlaceOrderFormController {
     private void loadAllCustomerIds() {
         try {
             ArrayList<CustomerDTO> allCustomers = customerDAO.getAll();
-
             for (CustomerDTO c : allCustomers) {
                 cmbCustomerId.getItems().add(c.getId());
             }
@@ -223,7 +213,6 @@ public class PlaceOrderFormController {
     private void loadAllItemCodes() {
         try {
             /*Get all items*/
-
             ArrayList<ItemDTO> allItems = itemDAO.getAll();
             for (ItemDTO i : allItems) {
                 cmbItemCode.getItems().add(i.getCode());
@@ -260,7 +249,6 @@ public class PlaceOrderFormController {
         BigDecimal unitPrice = new BigDecimal(txtUnitPrice.getText()).setScale(2);
         int qty = Integer.parseInt(txtQty.getText());
         BigDecimal total = unitPrice.multiply(new BigDecimal(qty)).setScale(2);
-
         boolean exists = tblOrderDetails.getItems().stream().anyMatch(detail -> detail.getCode().equals(itemCode));
 
         if (exists) {
@@ -287,7 +275,6 @@ public class PlaceOrderFormController {
 
     private void calculateTotal() {
         BigDecimal total = new BigDecimal(0);
-
         for (OrderDetailTM detail : tblOrderDetails.getItems()) {
             total = total.add(detail.getTotal());
         }
@@ -334,7 +321,6 @@ public class PlaceOrderFormController {
 
             OrderDTO orderDTO = new OrderDTO(orderId, orderDate, customerId);
             boolean orderAdded = orderDAO.save(orderDTO);
-
             if (!orderAdded) {
                 connection.rollback();
                 connection.setAutoCommit(true);
@@ -343,7 +329,6 @@ public class PlaceOrderFormController {
 
             for (OrderDetailDTO detail : orderDetails) {
                 boolean odAdded = orderDetailsDAO.save(detail);
-
                 if (!odAdded) {
                     connection.rollback();
                     connection.setAutoCommit(true);
@@ -353,8 +338,6 @@ public class PlaceOrderFormController {
 //                //Search & Update Item
                 ItemDTO item = findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
-
-
                 boolean itemUpdate = itemDAO.update(item);
 
                 if (!itemUpdate) {
@@ -363,11 +346,9 @@ public class PlaceOrderFormController {
                     return false;
                 }
             }
-
             connection.commit();
             connection.setAutoCommit(true);
             return true;
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -379,7 +360,6 @@ public class PlaceOrderFormController {
 
     public ItemDTO findItem(String code) {
         try {
-
             return itemDAO.search(code);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find the Item " + code, e);
