@@ -58,7 +58,7 @@ public class PlaceOrderFormController {
     private String orderId;
 
     //DI
-    CrudDAO<CustomerDTO,String> customerDAO = new CustomerDAO();
+    CrudDAO<CustomerDTO,String> customerDAO = new CustomerDAOImpl();
     CrudDAO<ItemDTO,String> itemDAO = new ItemDAOImpl();
     CrudDAO<OrderDTO,String> orderDAO = new OrderDAOImpl();
     CrudDAO<OrderDetailDTO,String> orderDetailsDAO = new OrderDetailsDAOImpl();

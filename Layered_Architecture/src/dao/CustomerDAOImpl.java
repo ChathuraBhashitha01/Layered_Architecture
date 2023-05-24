@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CustomerDAO implements CrudDAO<CustomerDTO,String> {
+public class CustomerDAOImpl implements CrudDAO<CustomerDTO,String> {
     @Override
     public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
@@ -58,5 +58,8 @@ public class CustomerDAO implements CrudDAO<CustomerDTO,String> {
         }
         return null;
     }
+
+
+
 
 }
