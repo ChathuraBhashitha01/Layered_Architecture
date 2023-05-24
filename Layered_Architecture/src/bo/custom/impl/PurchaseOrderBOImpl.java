@@ -1,15 +1,11 @@
 package bo.custom.impl;
 
 import bo.custom.PurchaseOrderBO;
-import dao.DAOObjectCreator;
+import dao.DAOFactory;
 import dao.custom.CustomerDAO;
 import dao.custom.ItemDAO;
 import dao.custom.OrderDAO;
 import dao.custom.OrderDetailsDAO;
-import dao.custom.impl.CustomerDAOImpl;
-import dao.custom.impl.ItemDAOImpl;
-import dao.custom.impl.OrderDAOImpl;
-import dao.custom.impl.OrderDetailsDAOImpl;
 import db.DBConnection;
 import model.CustomerDTO;
 import model.ItemDTO;
@@ -23,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
-    CustomerDAO customerDAO = DAOObjectCreator.getInstance().getCustomerDAO();
-    ItemDAO itemDAO =DAOObjectCreator.getInstance().getItemDAO();
-    OrderDAO orderDAO = DAOObjectCreator.getInstance().getOrderDAO();
-    OrderDetailsDAO orderDetailsDAO = DAOObjectCreator.getInstance().getOrderDetailsDAO();
+    CustomerDAO customerDAO = DAOFactory.getInstance().getCustomerDAO();
+    ItemDAO itemDAO = DAOFactory.getInstance().getItemDAO();
+    OrderDAO orderDAO = DAOFactory.getInstance().getOrderDAO();
+    OrderDetailsDAO orderDetailsDAO = DAOFactory.getInstance().getOrderDetailsDAO();
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {

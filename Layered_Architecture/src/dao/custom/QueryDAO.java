@@ -1,4 +1,6 @@
 package dao.custom;
 
-public interface QueryDAO {
+import dao.SuperDAO;
+
+public interface QueryDAO extends SuperDAO {
 }

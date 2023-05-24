@@ -6,35 +6,19 @@ import dao.custom.OrderDAO;
 import dao.custom.OrderDetailsDAO;
 import dao.custom.impl.*;
 
-public class DAOObjectCreator {
-    private static DAOObjectCreator daoObjectCreator;
-    private DAOObjectCreator(){
+public class DAOFactory {
+    private static DAOFactory daoObjectCreator;
+    private DAOFactory(){
 
     }
-    public static DAOObjectCreator getInstance(){
+    public static DAOFactory getInstance(){
         if (daoObjectCreator==null){
-            daoObjectCreator= new DAOObjectCreator();
+            daoObjectCreator= new DAOFactory();
         }
         return daoObjectCreator;
     }
 
-    public CustomerDAO getCustomerDAO(){
-        return new CustomerDAOImpl();
-    }
-
-    public ItemDAO getItemDAO(){
-       return new ItemDAOImpl();
-    }
-
-    public OrderDAO getOrderDAO(){
-        return new OrderDAOImpl();
-    }
-
-    public OrderDetailsDAO getOrderDetailsDAO(){
-        return new OrderDetailsDAOImpl();
-    }
-
-    public   getDAO(String res){
+    public SuperDAO  getDAO(String res){
         switch (res){
             case "Customer":
                return new CustomerDAOImpl();
@@ -48,7 +32,6 @@ public class DAOObjectCreator {
                 return new QueryDAOImpl();
             default:
                 return null;
-
         }
     }
 
