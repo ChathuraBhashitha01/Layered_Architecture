@@ -24,9 +24,9 @@ import java.util.List;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     CustomerDAO customerDAO = DAOObjectCreator.getInstance().getCustomerDAO();
-    ItemDAO itemDAO = new ItemDAOImpl();
-    OrderDAO orderDAO = new OrderDAOImpl();
-    OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAOImpl();
+    ItemDAO itemDAO =DAOObjectCreator.getInstance().getItemDAO();
+    OrderDAO orderDAO = DAOObjectCreator.getInstance().getOrderDAO();
+    OrderDetailsDAO orderDetailsDAO = DAOObjectCreator.getInstance().getOrderDetailsDAO();
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
