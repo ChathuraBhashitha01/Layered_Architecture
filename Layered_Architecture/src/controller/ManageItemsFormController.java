@@ -1,5 +1,6 @@
 package controller;
 
+import bo.ItemBO;
 import bo.ItemBOImpl;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -43,7 +44,7 @@ public class ManageItemsFormController {
     public JFXButton btnAddNewItem;
 
     //DI
-    ItemBOImpl itemBO=new ItemBOImpl();
+    ItemBO itemBO=new ItemBOImpl();
 
 
     public void initialize() {
