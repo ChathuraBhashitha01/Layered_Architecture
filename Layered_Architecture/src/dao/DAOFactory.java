@@ -18,17 +18,21 @@ public class DAOFactory {
         return daoObjectCreator;
     }
 
-    public SuperDAO  getDAO(String res){
+    public enum DAOTypes{
+        CUSTOMER,ITEM,ORDER,ORDER_DETAILS,QUERY_DAO
+    }
+
+    public SuperDAO  getDAO(DAOTypes res){
         switch (res){
-            case "Customer":
+            case CUSTOMER:
                return new CustomerDAOImpl();
-            case "Item":
+            case ITEM:
                 return new ItemDAOImpl();
-            case "Order":
+            case ORDER:
                 return new OrderDAOImpl();
-            case "OrderDetails":
+            case ORDER_DETAILS:
                 return new OrderDetailsDAOImpl();
-            case "QueryDAO":
+            case QUERY_DAO:
                 return new QueryDAOImpl();
             default:
                 return null;

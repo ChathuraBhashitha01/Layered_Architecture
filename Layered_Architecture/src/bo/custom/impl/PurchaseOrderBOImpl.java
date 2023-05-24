@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
-    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDAOFactory().getDAO("Customer");
-    ItemDAO itemDAO = (ItemDAO) DAOFactory.getDAOFactory().getDAO("Item");
-    OrderDAO orderDAO = (OrderDAO) DAOFactory.getDAOFactory().getDAO("Order");
-    OrderDetailsDAO orderDetailsDAO = (OrderDetailsDAO) DAOFactory.getDAOFactory().getDAO("OrderDetails");
+    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+    ItemDAO itemDAO = (ItemDAO) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+    OrderDAO orderDAO = (OrderDAO) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER);
+    OrderDetailsDAO orderDetailsDAO = (OrderDetailsDAO) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
