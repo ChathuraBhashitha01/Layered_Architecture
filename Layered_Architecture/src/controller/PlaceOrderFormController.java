@@ -317,8 +317,10 @@ public class PlaceOrderFormController {
         try {
             return poBO.saveOrder(orderId, orderDate, customerId, orderDetails);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
