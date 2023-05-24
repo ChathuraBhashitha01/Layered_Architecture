@@ -1,4 +1,4 @@
-package dao;
+package dao.custom.impl.util;
 
 import db.DBConnection;
 
