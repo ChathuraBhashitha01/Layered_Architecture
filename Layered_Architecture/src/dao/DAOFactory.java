@@ -11,7 +11,7 @@ public class DAOFactory {
     private DAOFactory(){
 
     }
-    public static DAOFactory getInstance(){
+    public static DAOFactory getDAOFactory(){
         if (daoObjectCreator==null){
             daoObjectCreator= new DAOFactory();
         }
