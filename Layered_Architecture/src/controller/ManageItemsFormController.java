@@ -42,7 +42,7 @@ public class ManageItemsFormController {
     public JFXButton btnAddNewItem;
 
     //DI
-   ItemDAO itemDAO = new ItemDAOImpl();
+
 
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
