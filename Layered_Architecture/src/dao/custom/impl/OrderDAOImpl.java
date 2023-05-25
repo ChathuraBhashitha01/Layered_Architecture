@@ -1,7 +1,7 @@
 package dao.custom.impl;
 
-import dao.custom.impl.util.SQLUtil;
 import dao.custom.OrderDAO;
+import dao.custom.impl.util.SQLUtil;
 import model.OrderDTO;
 
 import java.sql.Date;
@@ -12,28 +12,33 @@ import java.util.ArrayList;
 public class OrderDAOImpl implements OrderDAO {
     @Override
     public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("This feature yet to be developed");
+        ResultSet rst = SQLUtil.execute("SELECT * FROM `Orders`");
+        ArrayList<OrderDTO> allItems = new ArrayList<>();
+        while (rst.next()) {
+            allItems.add(new OrderDTO(rst.getString(1), rst.getDate(2).toLocalDate(), rst.getString(3)));
+        }
+        return allItems;
     }
 
     @Override
     public boolean save(OrderDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)",dto.getOrderId(),Date.valueOf(dto.getOrderDate()),dto.getCustomerId());
+        return SQLUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)", dto.getOrderId(), Date.valueOf(dto.getOrderDate()), dto.getCustomerId());
     }
 
     @Override
     public boolean update(OrderDTO dto) throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("This feature yet to be developed");
+        return SQLUtil.execute("UPDATE `Orders` SET date=?, customerID=? WHERE oid=?", dto.getOrderDate(), dto.getCustomerId(), dto.getOrderId());
     }
 
     @Override
     public boolean exist(String orderID) throws SQLException, ClassNotFoundException {
-        ResultSet rst = SQLUtil.execute("SELECT oid FROM `Orders` WHERE oid=?",orderID);
+        ResultSet rst = SQLUtil.execute("SELECT oid FROM `Orders` WHERE oid=?", orderID);
         return rst.next();
     }
 
     @Override
-    public boolean delete(String s) throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("This feature yet to be developed");
+    public boolean delete(String oid) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("DELETE FROM `Orders` WHERE oid=?", oid);
     }
 
     @Override
@@ -43,11 +48,13 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public OrderDTO search(String s) throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("This feature yet to be developed");
+    public OrderDTO search(String oid) throws SQLException, ClassNotFoundException {
+        ResultSet rst = SQLUtil.execute("SELECT * FROM `Orders` WHERE oid=?", oid);
+        if (rst.next()) {
+            return new OrderDTO(rst.getString(1), rst.getDate(2).toLocalDate(), rst.getString(3));
+        }
+        return null;
     }
-
-
 
 
 }
