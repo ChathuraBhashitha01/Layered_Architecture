@@ -1,21 +1,14 @@
 package dao;
 
-import dao.custom.CustomerDAO;
-import dao.custom.ItemDAO;
-import dao.custom.OrderDAO;
-import dao.custom.OrderDetailsDAO;
 import dao.custom.impl.*;
 
 public class DAOFactory {
-    private static DAOFactory daoObjectCreator;
+    private static DAOFactory daoFactory;
     private DAOFactory(){
 
     }
     public static DAOFactory getDAOFactory(){
-        if (daoObjectCreator==null){
-            daoObjectCreator= new DAOFactory();
-        }
-        return daoObjectCreator;
+        return  (daoFactory==null)? daoFactory= new DAOFactory():daoFactory;
     }
 
     public enum DAOTypes{
