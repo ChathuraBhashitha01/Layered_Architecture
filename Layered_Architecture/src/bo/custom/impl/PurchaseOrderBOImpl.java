@@ -9,6 +9,8 @@ import dao.custom.OrderDetailsDAO;
 import db.DBConnection;
 import entity.Customer;
 import entity.Item;
+import entity.OrderDetails;
+import entity.Orders;
 import model.CustomerDTO;
 import model.ItemDTO;
 import model.OrderDTO;
@@ -85,13 +87,13 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
         try {
             connection = DBConnection.getDbConnection().getConnection();
             /*if order id already exist*/
-            if (orderDAO.exist(orderId)) {
+            if (orderDAO.exist(dto.getOrderId())) {
                 return false;
             }
 
             connection.setAutoCommit(false);
 
-            OrderDTO orderDTO = new OrderDTO(orderId, orderDate, customerId);
+            Orders orderDTO = new Orders(dto.getOrderId(), dto.getOrderDate(), dto.getCustomerId());
             boolean orderAdded = orderDAO.save(orderDTO);
             if (!orderAdded) {
                 connection.rollback();
@@ -99,8 +101,9 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
                 return false;
             }
 
-            for (OrderDetailDTO detail : orderDetails) {
-                boolean odAdded = orderDetailsDAO.save(detail);
+            for (OrderDetailDTO detail : dto.getOrderDetaisList()) {
+                OrderDetails orderDetails = new OrderDetails(detail.getOrderID(),detail.getItemCode(),detail.getQty(),dto.getOrderTotal());
+                boolean odAdded = orderDetailsDAO.save(orderDetails);
                 if (!odAdded) {
                     connection.rollback();
                     connection.setAutoCommit(true);
