@@ -18,26 +18,24 @@ import model.OrderDetailDTO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
-    CustomerDAO customerDAO =  DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
-    ItemDAO itemDAO =  DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ITEM);
-    OrderDAO orderDAO =  DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER);
-    OrderDetailsDAO orderDetailsDAO =  DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
+    CustomerDAO customerDAO = DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+    ItemDAO itemDAO = DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+    OrderDAO orderDAO = DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER);
+    OrderDetailsDAO orderDetailsDAO = DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
         Customer c = customerDAO.search(id);
-        return new CustomerDTO(c.getId(),c.getName(),c.getAddress());
+        return new CustomerDTO(c.getId(), c.getName(), c.getAddress());
     }
 
     @Override
     public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
         Item i = itemDAO.search(code);
-        return new ItemDTO(i.getCode(),i.getDescription(),i.getUnitPrice(),i.getQtyOnHand());
+        return new ItemDTO(i.getCode(), i.getDescription(), i.getUnitPrice(), i.getQtyOnHand());
     }
 
     @Override
@@ -58,9 +56,9 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     @Override
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
         ArrayList<Customer> entityList = customerDAO.getAll();
-        ArrayList<CustomerDTO> dtoList= new ArrayList<>();
+        ArrayList<CustomerDTO> dtoList = new ArrayList<>();
         for (Customer c : entityList) {
-            dtoList.add(new CustomerDTO(c.getId(),c.getName(),c.getAddress()));
+            dtoList.add(new CustomerDTO(c.getId(), c.getName(), c.getAddress()));
         }
         return dtoList;
     }
@@ -68,9 +66,9 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     @Override
     public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
         ArrayList<Item> entityList = itemDAO.getAll();
-        ArrayList<ItemDTO> dtoList= new ArrayList<>();
+        ArrayList<ItemDTO> dtoList = new ArrayList<>();
         for (Item item : entityList) {
-            dtoList.add(new ItemDTO(item.getCode(),item.getDescription(),item.getUnitPrice(), item.getQtyOnHand()));
+            dtoList.add(new ItemDTO(item.getCode(), item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
         }
         return dtoList;
     }
@@ -102,7 +100,7 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
             }
 
             for (OrderDetailDTO detail : dto.getOrderDetaisList()) {
-                OrderDetails orderDetails = new OrderDetails(detail.getOrderID(),detail.getItemCode(),detail.getQty(),dto.getOrderTotal());
+                OrderDetails orderDetails = new OrderDetails(detail.getOrderID(), detail.getItemCode(), detail.getQty(), dto.getOrderTotal());
                 boolean odAdded = orderDetailsDAO.save(orderDetails);
                 if (!odAdded) {
                     connection.rollback();
@@ -113,7 +111,7 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 //                //Search & Update Item
                 ItemDTO item = findItemByID(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
-                boolean itemUpdate = itemDAO.update(item);
+                boolean itemUpdate = itemDAO.update(new Item(item.getCode(), item.getDescription(), item.getQtyOnHand(), item.getUnitPrice()));
 
                 if (!itemUpdate) {
                     connection.rollback();
@@ -134,7 +132,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     public ItemDTO findItemByID(String code) {
         try {
-            return itemDAO.search(code);
+            Item search = itemDAO.search(code);
+            return new ItemDTO(search.getCode(),search.getDescription(),search.getUnitPrice(),search.getQtyOnHand());
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find the Item " + code, e);
         } catch (ClassNotFoundException e) {
