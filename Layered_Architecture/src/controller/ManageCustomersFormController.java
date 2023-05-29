@@ -1,5 +1,6 @@
 package controller;
 
+import bo.BoFactory;
 import bo.custom.CustomerBO;
 import bo.custom.impl.CustomerBOImpl;
 import com.jfoenix.controls.JFXButton;
@@ -42,7 +43,7 @@ public class ManageCustomersFormController {
     public JFXButton btnAddNewCustomer;
 
     //DI (Property Injection)
-    CustomerBO customerBO=new CustomerBOImpl();
+    CustomerBO customerBO= (CustomerBO) BoFactory.getBoFactory().getBO(BoFactory.BOTypes.CUSTOMER_BO);
 
     public void initialize() {
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));

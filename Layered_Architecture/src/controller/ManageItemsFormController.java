@@ -1,5 +1,6 @@
 package controller;
 
+import bo.BoFactory;
 import bo.custom.ItemBO;
 import bo.custom.impl.ItemBOImpl;
 import com.jfoenix.controls.JFXButton;
@@ -42,7 +43,7 @@ public class ManageItemsFormController {
     public JFXButton btnAddNewItem;
 
     //DI
-    ItemBO itemBO=new ItemBOImpl();
+    ItemBO itemBO= (ItemBO) BoFactory.getBoFactory().getBO(BoFactory.BOTypes.ITEM_BO);
 
 
     public void initialize() {
