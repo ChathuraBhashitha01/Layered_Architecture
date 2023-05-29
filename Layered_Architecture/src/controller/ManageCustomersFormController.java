@@ -43,7 +43,7 @@ public class ManageCustomersFormController {
     public JFXButton btnAddNewCustomer;
 
     //DI (Property Injection)
-    CustomerBO customerBO= (CustomerBO) BoFactory.getBoFactory().getBO(BoFactory.BOTypes.CUSTOMER_BO);
+    CustomerBO customerBO=  BoFactory.getBoFactory().getBO(BoFactory.BOTypes.CUSTOMER_BO);
 
     public void initialize() {
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));

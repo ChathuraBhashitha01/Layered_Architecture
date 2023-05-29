@@ -43,7 +43,7 @@ public class ManageItemsFormController {
     public JFXButton btnAddNewItem;
 
     //DI
-    ItemBO itemBO= (ItemBO) BoFactory.getBoFactory().getBO(BoFactory.BOTypes.ITEM_BO);
+    ItemBO itemBO=  BoFactory.getBoFactory().getBO(BoFactory.BOTypes.ITEM_BO);
 
 
     public void initialize() {
