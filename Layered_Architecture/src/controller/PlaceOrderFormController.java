@@ -57,8 +57,7 @@ public class PlaceOrderFormController {
 
     //DI
     PurchaseOrderBO poBO = BoFactory.getBoFactory().getBO(BoFactory.BOTypes.PURCHASE_ORDER_BO);
-
-
+    
     public void initialize() throws SQLException, ClassNotFoundException {
         tblOrderDetails.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblOrderDetails.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
