@@ -4,29 +4,31 @@ import dao.custom.impl.*;
 
 public class DAOFactory {
     private static DAOFactory daoFactory;
-    private DAOFactory(){
+
+    private DAOFactory() {
 
     }
-    public static DAOFactory getDAOFactory(){
-        return  (daoFactory==null)? daoFactory= new DAOFactory():daoFactory;
+
+    public static DAOFactory getDAOFactory() {
+        return (daoFactory == null) ? daoFactory = new DAOFactory() : daoFactory;
     }
 
-    public enum DAOTypes{
-        CUSTOMER,ITEM,ORDER,ORDER_DETAILS,QUERY_DAO
+    public enum DAOTypes {
+        CUSTOMER, ITEM, ORDER, ORDER_DETAILS, QUERY_DAO
     }
 
-    public SuperDAO  getDAO(DAOTypes res){
-        switch (res){
+    public <T extends SuperDAO> T getDAO(DAOTypes res) {
+        switch (res) {
             case CUSTOMER:
-               return new CustomerDAOImpl();
+                return (T) new CustomerDAOImpl();
             case ITEM:
-                return new ItemDAOImpl();
+                return (T) new ItemDAOImpl();
             case ORDER:
-                return new OrderDAOImpl();
+                return (T) new OrderDAOImpl();
             case ORDER_DETAILS:
-                return new OrderDetailsDAOImpl();
+                return (T) new OrderDetailsDAOImpl();
             case QUERY_DAO:
-                return new QueryDAOImpl();
+                return (T) new QueryDAOImpl();
             default:
                 return null;
         }
