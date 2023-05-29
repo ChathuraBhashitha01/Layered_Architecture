@@ -2,6 +2,7 @@ package dao.custom.impl;
 
 import dao.custom.OrderDetailsDAO;
 import dao.custom.impl.util.SQLUtil;
+import entity.OrderDetails;
 import model.OrderDetailDTO;
 
 import java.sql.ResultSet;
@@ -10,23 +11,23 @@ import java.util.ArrayList;
 
 public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     @Override
-    public ArrayList<OrderDetailDTO> getAll() throws SQLException, ClassNotFoundException {
+    public ArrayList<OrderDetails> getAll() throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM OrderDetails");
-        ArrayList<OrderDetailDTO> allItems = new ArrayList<>();
+        ArrayList<OrderDetails> allItems = new ArrayList<>();
         while (rst.next()) {
-            allItems.add(new OrderDetailDTO(rst.getString(1), rst.getString(2), rst.getInt(3),rst.getBigDecimal(4)));
+            allItems.add(new OrderDetails(rst.getString(1), rst.getString(2), rst.getInt(3),rst.getBigDecimal(4)));
         }
         return allItems;
     }
 
     @Override
-    public boolean save(OrderDetailDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)", dto.getOrderID(), dto.getItemCode(), dto.getUnitPrice(), dto.getQty());
+    public boolean save(OrderDetails entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)", entity.getOid(), entity.getItemCode(), entity.getUnitPrice(), entity.getQty());
     }
 
     @Override
-    public boolean update(OrderDetailDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("UPDATE OrderDetails SET itemCode=?, qty=?,unitPrice=? WHERE oid=?", dto.getItemCode(), dto.getQty(), dto.getUnitPrice(),dto.getOrderID());
+    public boolean update(OrderDetails entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("UPDATE OrderDetails SET itemCode=?, qty=?,unitPrice=? WHERE oid=?", entity.getItemCode(), entity.getQty(), entity.getUnitPrice(),entity.getOid());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     }
 
     @Override
-    public OrderDetailDTO search(String s) throws SQLException, ClassNotFoundException {
+    public OrderDetails search(String s) throws SQLException, ClassNotFoundException {
         throw new UnsupportedOperationException("This feature yet to be developed");
     }
 

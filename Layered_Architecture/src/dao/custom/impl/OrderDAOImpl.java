@@ -2,7 +2,7 @@ package dao.custom.impl;
 
 import dao.custom.OrderDAO;
 import dao.custom.impl.util.SQLUtil;
-import model.OrderDTO;
+import entity.Orders;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -11,23 +11,23 @@ import java.util.ArrayList;
 
 public class OrderDAOImpl implements OrderDAO {
     @Override
-    public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
+    public ArrayList<Orders> getAll() throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM `Orders`");
-        ArrayList<OrderDTO> allItems = new ArrayList<>();
+        ArrayList<Orders> allItems = new ArrayList<>();
         while (rst.next()) {
-            allItems.add(new OrderDTO(rst.getString(1), rst.getDate(2).toLocalDate(), rst.getString(3)));
+            allItems.add(new Orders(rst.getString(1), rst.getDate(2).toLocalDate(), rst.getString(3)));
         }
         return allItems;
     }
 
     @Override
-    public boolean save(OrderDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)", dto.getOrderId(), Date.valueOf(dto.getOrderDate()), dto.getCustomerId());
+    public boolean save(Orders entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)", entity.getOid(), Date.valueOf(entity.getDate()), entity.getCustomerID());
     }
 
     @Override
-    public boolean update(OrderDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("UPDATE `Orders` SET date=?, customerID=? WHERE oid=?", dto.getOrderDate(), dto.getCustomerId(), dto.getOrderId());
+    public boolean update(Orders entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("UPDATE `Orders` SET date=?, customerID=? WHERE oid=?", entity.getDate(), entity.getCustomerID(), entity.getOid());
     }
 
     @Override
@@ -48,10 +48,10 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public OrderDTO search(String oid) throws SQLException, ClassNotFoundException {
+    public Orders search(String oid) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM `Orders` WHERE oid=?", oid);
         if (rst.next()) {
-            return new OrderDTO(rst.getString(1), rst.getDate(2).toLocalDate(), rst.getString(3));
+            return new Orders(rst.getString(1), rst.getDate(2).toLocalDate(), rst.getString(3));
         }
         return null;
     }
