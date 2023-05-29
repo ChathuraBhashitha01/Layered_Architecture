@@ -91,17 +91,17 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
             connection.setAutoCommit(false);
 
-            Orders orderDTO = new Orders(dto.getOrderId(), dto.getOrderDate(), dto.getCustomerId());
-            boolean orderAdded = orderDAO.save(orderDTO);
+            Orders orderEntity = new Orders(dto.getOrderId(), dto.getOrderDate(), dto.getCustomerId());
+            boolean orderAdded = orderDAO.save(orderEntity);
             if (!orderAdded) {
                 connection.rollback();
                 connection.setAutoCommit(true);
                 return false;
             }
 
-            for (OrderDetailDTO detail : dto.getOrderDetaisList()) {
-                OrderDetails orderDetails = new OrderDetails(detail.getOrderID(), detail.getItemCode(), detail.getQty(), dto.getOrderTotal());
-                boolean odAdded = orderDetailsDAO.save(orderDetails);
+            for (OrderDetailDTO odDTO : dto.getOrderDetaisList()) {
+                OrderDetails orderDetailsEntity = new OrderDetails(odDTO.getOrderID(), odDTO.getItemCode(), odDTO.getQty(), odDTO.getUnitPrice());
+                boolean odAdded = orderDetailsDAO.save(orderDetailsEntity);
                 if (!odAdded) {
                     connection.rollback();
                     connection.setAutoCommit(true);
@@ -109,8 +109,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
                 }
 
 //                //Search & Update Item
-                ItemDTO item = findItemByID(detail.getItemCode());
-                item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
+                ItemDTO item = findItemByID(orderDetailsEntity.getItemCode());
+                item.setQtyOnHand(item.getQtyOnHand() - orderDetailsEntity.getQty());
                 boolean itemUpdate = itemDAO.update(new Item(item.getCode(), item.getDescription(), item.getQtyOnHand(), item.getUnitPrice()));
 
                 if (!itemUpdate) {
