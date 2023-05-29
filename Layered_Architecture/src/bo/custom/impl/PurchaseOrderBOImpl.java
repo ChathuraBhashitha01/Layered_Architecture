@@ -7,6 +7,8 @@ import dao.custom.ItemDAO;
 import dao.custom.OrderDAO;
 import dao.custom.OrderDetailsDAO;
 import db.DBConnection;
+import entity.Customer;
+import entity.Item;
 import model.CustomerDTO;
 import model.ItemDTO;
 import model.OrderDTO;
@@ -26,12 +28,14 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAO.search(id);
+        Customer c = customerDAO.search(id);
+        return new CustomerDTO(c.getId(),c.getName(),c.getAddress());
     }
 
     @Override
     public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
-        return itemDAO.search(code);
+        Item i = itemDAO.search(code);
+        return new ItemDTO(i.getCode(),i.getDescription(),i.getUnitPrice(),i.getQtyOnHand());
     }
 
     @Override
@@ -51,12 +55,22 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     @Override
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
-        return customerDAO.getAll();
+        ArrayList<Customer> entityList = customerDAO.getAll();
+        ArrayList<CustomerDTO> dtoList= new ArrayList<>();
+        for (Customer c : entityList) {
+            dtoList.add(new CustomerDTO(c.getId(),c.getName(),c.getAddress()));
+        }
+        return dtoList;
     }
 
     @Override
     public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
-        return itemDAO.getAll();
+        ArrayList<Item> entityList = itemDAO.getAll();
+        ArrayList<ItemDTO> dtoList= new ArrayList<>();
+        for (Item item : entityList) {
+            dtoList.add(new ItemDTO(item.getCode(),item.getDescription(),item.getUnitPrice(), item.getQtyOnHand()));
+        }
+        return dtoList;
     }
 
     @Override
@@ -65,7 +79,7 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     }
 
     @Override
-    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
+    public boolean saveOrder(OrderDTO dto) throws SQLException, ClassNotFoundException {
         /*Transaction*/
         Connection connection = null;
         try {
