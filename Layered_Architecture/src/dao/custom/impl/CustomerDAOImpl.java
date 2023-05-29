@@ -1,8 +1,8 @@
 package dao.custom.impl;
 
-import dao.custom.impl.util.SQLUtil;
 import dao.custom.CustomerDAO;
-import model.CustomerDTO;
+import dao.custom.impl.util.SQLUtil;
+import entity.Customer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,23 +10,23 @@ import java.util.ArrayList;
 
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
-    public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
-        ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
+    public ArrayList<Customer> getAll() throws SQLException, ClassNotFoundException {
+        ArrayList<Customer> allCustomers = new ArrayList<>();
         ResultSet rst = SQLUtil.execute("SELECT * FROM Customer");
         while (rst.next()) {
-            allCustomers.add(new CustomerDTO(rst.getString(1), rst.getString(2), rst.getString(3)));
+            allCustomers.add(new Customer(rst.getString(1), rst.getString(2), rst.getString(3)));
         }
         return allCustomers;
     }
 
     @Override
-    public boolean save(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", dto.getId(), dto.getName(), dto.getAddress());
+    public boolean save(Customer entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", entity.getId(), entity.getName(), entity.getAddress());
     }
 
     @Override
-    public boolean update(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?", dto.getName(), dto.getAddress(), dto.getId());
+    public boolean update(Customer entity) throws SQLException, ClassNotFoundException {
+        return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?", entity.getName(), entity.getAddress(), entity.getId());
     }
 
     @Override
@@ -53,10 +53,10 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public CustomerDTO search(String id) throws SQLException, ClassNotFoundException {
+    public Customer search(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT * FROM Customer WHERE id=?", id);
         if (rst.next()) {
-            return new CustomerDTO(rst.getString(1), rst.getString(2), rst.getString(3));
+            return new Customer(rst.getString(1), rst.getString(2), rst.getString(3));
         }
         return null;
     }
